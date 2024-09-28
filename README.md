@@ -1,0 +1,2 @@
+# library-plugin
+Library plugin
