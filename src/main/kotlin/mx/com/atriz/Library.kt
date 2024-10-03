@@ -1,16 +1,21 @@
 package mx.com.atriz
 
-
 import com.android.build.api.dsl.LibraryExtension
-import mx.com.atriz.core.Version
-import mx.com.atriz.ext.library
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class Plugin : Plugin<Project> {
+class Library : Plugin<Project> {
 
     override fun apply(project: Project) {
+        applyPlugins(project)
         setProjectConfig(project)
+    }
+
+    private fun applyPlugins(project: Project) {
+        project.apply {
+            plugin("com.android.library")
+            plugin("kotlin-android")
+        }
     }
 
     private fun setProjectConfig(project: Project) {
@@ -45,3 +50,5 @@ class Plugin : Plugin<Project> {
         }
     }
 }
+
+fun Project.library(): LibraryExtension = extensions.getByType(LibraryExtension::class.java)

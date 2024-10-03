@@ -1,4 +1,4 @@
-package mx.com.atriz.core
+package mx.com.atriz
 
 import org.gradle.api.JavaVersion
 

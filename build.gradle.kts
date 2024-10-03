@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "mx.com.atriz"
-version = "0.0.4"
+version = "0.0.5"
 
 repositories {
     mavenCentral()
@@ -31,7 +31,7 @@ gradlePlugin {
     plugins {
         create("library") {
             id = "mx.com.atriz.library"
-            implementationClass = "mx.com.atriz.Plugin"
+            implementationClass = "mx.com.atriz.Library"
             version = version
             displayName = "Atriz Module Plugin"
             description = "All needed setup for application development"
