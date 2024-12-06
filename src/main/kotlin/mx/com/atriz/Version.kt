@@ -6,7 +6,7 @@ object Version {
     const val COMPILE_SDK = 34
     const val TARGET_SDK = 34
     const val MIN_SDK = 26
-    const val COMPOSE = "1.5.14"
+    const val COMPOSE = "1.5.15"
 
-    fun java(): JavaVersion = JavaVersion.VERSION_17
+    fun java(): JavaVersion = JavaVersion.VERSION_21
 }
