@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "mx.com.atriz"
-version = "0.0.6"
+version = "0.0.7"
 
 repositories {
     mavenCentral()
@@ -24,7 +24,7 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 gradlePlugin {
