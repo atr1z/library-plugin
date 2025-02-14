@@ -24,10 +24,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
       - name: Publish to Maven Central
-        run: |
-          export SONATYPE_USERNAME=${{secrets.USER}}
-          export SONATYPE_PASSWORD=${{secrets.PASSWORD}}
-          export SIGNING_KEY=${{secrets.KEY}}
-          export SIGNING_KEY_ID=${{secrets.KEY_ID}}
-          export SIGNING_PASSWORD=${{secrets.KEY_PASS}}
-          ./gradlew publishToSonatype
+        env:
+          KEY=${{secrets.KEY}}
+          SECRET=${{secrets.SECRET}}
+          SIGNING_KEY=${{secrets.KEY}}
+          SIGNING_PASSWORD=${{secrets.KEY_PASS}}
+        run: ./gradlew publishPlugins -Pgradle.publish.key=$KEY -Pgradle.publish.secret=$SECRET -Pgradle.publish.signing.key=$KEY -Pgradle.publish.signing.password=$SECRET
