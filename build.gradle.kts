@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.21"
     `kotlin-dsl`
+    `java-gradle-plugin`
     signing
     id("eu.kakde.gradle.sonatype-maven-central-publisher") version "1.0.6"
 }
@@ -22,11 +23,23 @@ kotlin {
     jvmToolchain(21)
 }
 
+gradlePlugin {
+    plugins {
+        create("library") {
+            id = "mx.com.atriz.library"
+            implementationClass = "mx.com.atriz.Library"
+            version = Meta.VERSION
+            displayName = "Atriz Module Plugin"
+            description = Meta.DESC
+        }
+    }
+}
+
 object Meta {
     val COMPONENT_TYPE = "java"
     val GROUP = "mx.com.atriz"
     val ARTIFACT_ID = "library"
-    val VERSION = "0.0.7"
+    val VERSION = "0.0.8"
     val PUBLISHING_TYPE = "AUTOMATIC"
     val SHA_ALGORITHMS = listOf("SHA-256", "SHA-512")
     val DESC = "Module library for android applications"
@@ -76,6 +89,7 @@ sonatypeCentralPublishExtension {
         }
     }
 }
+
 signing {
     useInMemoryPgpKeys(
         System.getenv("SIGNING_KEY") ?: "",
