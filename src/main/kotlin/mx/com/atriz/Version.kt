@@ -3,10 +3,9 @@ package mx.com.atriz
 import org.gradle.api.JavaVersion
 
 object Version {
-    const val COMPILE_SDK = 34
-    const val TARGET_SDK = 34
+    const val COMPILE_SDK = 35
+    const val TARGET_SDK = 35
     const val MIN_SDK = 26
-    const val COMPOSE = "1.5.15"
 
     fun java(): JavaVersion = JavaVersion.VERSION_21
 }
