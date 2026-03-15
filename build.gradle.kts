@@ -1,6 +1,14 @@
 import com.vanniktech.maven.publish.GradlePublishPlugin
 import com.vanniktech.maven.publish.SonatypeHost
 
+group = "mx.com.atriz"
+version = providers.exec {
+    commandLine("git", "describe", "--tags", "--abbrev=0")
+    isIgnoreExitValue = true
+}.standardOutput.asText.map { it.trim().removePrefix("v") }
+    .map { if (it.isEmpty()) "0.0.0-SNAPSHOT" else it }
+    .get()
+
 plugins {
     signing
     kotlin("jvm") version "2.0.20"
@@ -10,11 +18,9 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
-group = "mx.com.atriz"
-version = "0.1.0"
-
 repositories {
     mavenCentral()
+    mavenLocal()
     google()
 }
 
@@ -22,6 +28,7 @@ dependencies {
     implementation(gradleApi())
     implementation(localGroovy())
     implementation("com.android.tools.build:gradle:8.8.1")
+    implementation("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.0.20")
 }
 
 kotlin {
@@ -35,10 +42,18 @@ gradlePlugin {
         create("library") {
             id = "mx.com.atriz.library"
             implementationClass = "mx.com.atriz.Library"
-            displayName = "Atriz Library Plugin"
             version = project.version
-            description = "Android module library ready to use with custom configurations"
+            displayName = "Atriz Library Plugin"
+            description = "Base Android library module configuration"
             tags = listOf("atriz", "library-plugin", "android")
+        }
+        create("libraryUi") {
+            id = "mx.com.atriz.library.ui"
+            implementationClass = "mx.com.atriz.LibraryUi"
+            version = project.version
+            displayName = "Atriz Library UI Plugin"
+            description = "Android library module configuration with UI support (View Binding)"
+            tags = listOf("atriz", "library-plugin", "android", "ui", "viewbinding")
         }
     }
 }
@@ -74,10 +89,11 @@ mavenPublishing {
     signAllPublications()
 }
 
+val signingKey = System.getenv("SIGNING_KEY")
+
 signing {
-    useInMemoryPgpKeys(
-        System.getenv("SIGNING_KEY") ?: "",
-        System.getenv("SIGNING_PASSWORD") ?: ""
-    )
-    sign(configurations.runtimeElements.get())
+    if (!signingKey.isNullOrBlank()) {
+        useInMemoryPgpKeys(signingKey, System.getenv("SIGNING_PASSWORD") ?: "")
+        sign(configurations.runtimeElements.get())
+    }
 }

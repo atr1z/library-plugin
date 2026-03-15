@@ -1,31 +1,48 @@
-name: Plugin release
+name: Plugin CI
 
 on:
   push:
     branches: [ "main" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'zulu'
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
     env:
-      KEY: ${{ secrets.KEY }}
-      SECRET: ${{ secrets.SECRET }}
       SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
       SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
       ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_USERNAME }}
       ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_PASSWORD }}
     steps:
-      - uses: actions/checkout@v4
-      - name: set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'zulu'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Publish to Gradle Plugin Portal
-        run: ./gradlew publish
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'zulu'
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Publish
+      run: ./gradlew publish

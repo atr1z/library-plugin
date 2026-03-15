@@ -40,7 +40,6 @@ class Library : Plugin<Project> {
 
             buildFeatures {
                 buildConfig = true
-                viewBinding = true
             }
 
             compileOptions {
